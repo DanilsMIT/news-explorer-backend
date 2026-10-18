@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
 const { celebrate, Joi, errors } = require("celebrate");
 // Middleware Registros de actividad (logs)
 const { requestLogger, errorLogger } = require("./middlewares/logger");
@@ -12,11 +11,13 @@ const { createUser, loginUser } = require("./controllers/users");
 const usersRoutes = require("./routes/users");
 const articlesRoutes = require("./routes/articles");
 
+require("dotenv").config();
+const { PORT = 3000, MONGO_URL = "mongodb://localhost:27017/newsExplorer" } =
+  process.env;
 const app = express();
-const PORT = 3001;
 app.use(cors());
 //MongoDB
-mongoose.connect("mongodb://localhost:27017/newsExplorer");
+mongoose.connect(MONGO_URL);
 //Body en formato JSON
 app.use(express.json());
 
