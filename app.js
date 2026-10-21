@@ -24,6 +24,28 @@ app.use(express.json());
 //Registro solicitudes
 app.use(requestLogger);
 // Rutas públicas
+//Get Noticias
+app.get("/search-news", async (req, res, next) => {
+  try {
+    const { q } = req.query;
+
+    const apiKey = process.env.NEWS_API_KEY;
+
+    const targetUrl = `https://gnews.io/api/v4/search?q=${q}&apikey=${apiKey}&lang=es&max=10`;
+
+    const response = await fetch(targetUrl);
+
+    if (!response.ok) {
+      throw new Error(`Error de GNews: ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.send(data);
+  } catch (err) {
+    console.error("Error en el puente de noticias:", err);
+    res.status(500).send({ message: "Error al buscar noticias" });
+  }
+});
 //Registrarse
 app.post(
   "/signup",
